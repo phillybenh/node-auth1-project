@@ -5,6 +5,7 @@ const session = require("express-session");
 
 const usersRouter = require("../users/users-router.js");
 const authRouter = require("../auth/auth-router.js");
+const { restricted } = require("../api/middleware")
 
 const server = express();
 
@@ -26,10 +27,11 @@ server.use(session(sessionConfig)); // turn on sessions for the API
 server.use(helmet());
 server.use(express.json());
 server.use(cors());
+server.use(restricted); // is this global middleware?
 
 server.use("/api", authRouter);
 server.use("/api", authRouter);
-server.use("/api/users", usersRouter);
+server.use("/api/users/", usersRouter);
 
 server.get("/", (req, res) => {
     res.json({ api: "up" });
